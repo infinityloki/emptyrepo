@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charan - Book Movie Tickets</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(to right, #2c3e50, #3498db);
+            color: white;
+            padding: 15px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 32px;
+            color: #f39c12;
+        }
+
+        .city-selector {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+
+        .city-selector i {
+            margin-right: 5px;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            padding-left: 40px;
+            border-radius: 50px;
+            border: none;
+            outline: none;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+
+        .user-actions a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        nav ul li a:hover, nav ul li a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1489599163802-44c6c47c23ee?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            height: 500px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero-content {
+            width: 100%;
+            padding: 0 5%;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            background: #f39c12;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .cta-button:hover {
+            background: #e67e22;
+        }
+
+        /* Now Showing Section */
+        .section-title {
+            text-align: center;
+            margin: 40px 0 20px;
+            font-size: 32px;
+            color: #333;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: #3498db;
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+
+        .movies-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px 5%;
+            gap: 25px;
+        }
+
+        .movie-card {
+            width: 250px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .movie-poster {
+            height: 350px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .movie-card:hover .movie-poster img {
+            transform: scale(1.05);
+        }
+
+        .movie-info {
+            padding: 15px;
+        }
+
+        .movie-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .movie-details {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .book-btn {
+            background: #3498db;
+            color: white;
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .book-btn:hover {
+            background: #2980b9;
+        }
+
+        /* Booking Steps */
+        .booking-steps {
+            background: #ecf0f1;
+            padding: 50px 5%;
+            text-align: center;
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .step {
+            width: 200px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .step i {
+            font-size: 40px;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+
+        .step h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 40px 5%;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 30px;
+        }
+
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            position: relative;
+            padding-bottom: 10px;
+            color: #f39c12;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: #3498db;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-column ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: #f39c12;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icons a {
+            color: white;
+            background: #34495e;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .social-icons a:hover {
+            background: #3498db;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #34495e;
+            margin-top: 20px;
+            color: #95a5a6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .city-selector {
+                margin: 10px 0;
+            }
+
+            .search-bar {
+                margin: 15px 0;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 5px;
+            }
+
+            .hero-content h1 {
+                font-size: 36px;
+            }
+
+            .movie-card {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="header-top">
+            <div class="logo">
+                <i class="fas fa-ticket-alt"></i>
+                CHARAN
+            </div>
+            <div class="city-selector">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Chennai</span>
+            </div>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search for movies, events, plays, sports and activities">
+            </div>
+            <div class="user-actions">
+                <a href="#"><i class="fas fa-user"></i> Sign In</a>
+                <a href="#"><i class="fas fa-bell"></i></a>
+                <a href="#"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active">Movies</a></li>
+                <li><a href="#">Stream</a></li>
+                <li><a href="#">Events</a></li>
+                <li><a href="#">Plays</a></li>
+                <li><a href="#">Sports</a></li>
+                <li><a href="#">Activities</a></li>
+                <li><a href="#">Offers</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Book Your Movie Tickets with Charan</h1>
+            <p>Discover the latest movies, book tickets in advance, and enjoy a seamless movie experience</p>
+            <button class="cta-button">Book Now</button>
+        </div>
+    </section>
+
+    <!-- Now Showing Section -->
+    <h2 class="section-title">Now Showing</h2>
+    <div class="movies-container">
+        <div class="movie-card">
+            <div class="movie-poster">
+                <img src="https://images.unsplash.com/photo-1594909122845-11baa439b7bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Avengers: Endgame">
+            </div>
+            <div class="movie-info">
+                <h3 class="movie-title">Avengers: Endgame</h3>
+                <div class="movie-details">
+                    <span>Action</span>
+                    <span>⭐ 4.8/5</span>
+                </div>
+                <button class="book-btn">Book Tickets</button>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="movie-poster">
+                <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="The Batman">
+            </div>
+            <div class="movie-info">
+                <h3 class="movie-title">The Batman</h3>
+                <div class="movie-details">
+                    <span>Action</span>
+                    <span>⭐ 4.5/5</span>
+                </div>
+                <button class="book-btn">Book Tickets</button>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="movie-poster">
+                <img src="https://images.unsplash.com/photo-1595769816263-9b910be24d5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Joker">
+            </div>
+            <div class="movie-info">
+                <h3 class="movie-title">Joker</h3>
+                <div class="movie-details">
+                    <span>Drama</span>
+                    <span>⭐ 4.7/5</span>
+                </div>
+                <button class="book-btn">Book Tickets</button>
+            </div>
+        </div>
+
+        <div class="movie-card">
+            <div class="movie-poster">
+                <img src="https://images.unsplash.com/photo-1574267432553-4b4628081c31?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Avatar">
+            </div>
+            <div class="movie-info">
+                <h3 class="movie-title">Avatar: The Way of Water</h3>
+                <div class="movie-details">
+                    <span>Adventure</span>
+                    <span>⭐ 4.6/5</span>
+                </div>
+                <button class="book-btn">Book Tickets</button>
+            </div>
+        </div>
+        
+        <div class="movie-card">
+            <div class="movie-poster">
+                <img src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Dune">
+            </div>
+            <div class="movie-info">
+                <h3 class="movie-title">Dune: Part Two</h3>
+                <div class="movie-details">
+                    <span>Sci-Fi</span>
+                    <span>⭐ 4.9/5</span>
+                </div>
+                <button class="book-btn">Book Tickets</button>
+            </div>
+        </div>
+        
+        <div class="movie-card">
+            <div class="movie-poster">
+                <img src="https://images.unsplash.com/photo-1630002027258-9515a4f5aabc?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Mission Impossible">
+            </div>
+            <div class="movie-info">
+                <h3 class="movie-title">Mission Impossible 7</h3>
+                <div class="movie-details">
+                    <span>Action</span>
+                    <span>⭐ 4.7/5</span>
+                </div>
+                <button class="book-btn">Book Tickets</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Steps Section -->
+    <section class="booking-steps">
+        <h2 class="section-title">How to Book Tickets</h2>
+        <div class="steps-container">
+            <div class="step">
+                <i class="fas fa-film"></i>
+                <h3>Choose a Movie</h3>
+                <p>Select from the latest releases</p>
+            </div>
+            <div class="step">
+                <i class="fas fa-clipboard-list"></i>
+                <h3>Select Showtime</h3>
+                <p>Pick date, time & theater</p>
+            </div>
+            <div class="step">
+                <i class="fas fa-chair"></i>
+                <h3>Choose Seats</h3>
+                <p>Select your preferred seats</p>
+            </div>
+            <div class="step">
+                <i class="fas fa-ticket-alt"></i>
+                <h3>Get Tickets</h3>
+                <p>Book and receive confirmation</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Charan</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">We're Hiring</a></li>
+                    <li><a href="#">Testimonials</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Movies</h3>
+                <ul>
+                    <li><a href="#">Movies in Chennai</a></li>
+                    <li><a href="#">Movies in Bangalore</a></li>
+                    <li><a href="#">Movies in Mumbai</a></li>
+                    <li><a href="#">Movies in Delhi</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Help</h3>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Sitemap</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Follow Us</h3>
+                <p>Stay connected for updates and offers</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 Charan Entertainment Ventures Ltd. All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple JavaScript for interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookButtons = document.querySelectorAll('.book-btn');
+            
+            bookButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const movieTitle = this.parentElement.querySelector('.movie-title').textContent;
+                    alert(`Booking functionality would be implemented for: ${movieTitle}`);
+                });
+            });
+            
+            const ctaButton = document.querySelector('.cta-button');
+            ctaButton.addEventListener('click', function() {
+                alert('Redirecting to movie booking page...');
+            });
+            
+            // City selector functionality
+            const citySelector = document.querySelector('.city-selector');
+            citySelector.addEventListener('click', function() {
+                const city = prompt('Enter your city:');
+                if (city) {
+                    this.querySelector('span').textContent = city;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
